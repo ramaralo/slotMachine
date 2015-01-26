@@ -1,0 +1,2 @@
+# slotMachine
+Slot machine implementation
