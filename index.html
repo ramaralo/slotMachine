@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="src/libs/thirdParty/jquery-2.1.1.min.js"></script>
+<script src="src/libs/thirdParty/rAF.js"></script>
+<script src="src/libs/thirdParty/jquery.browser.min.js"></script>
+<style type="text/css">
+
+.slotsContainer {
+	width: 500px;
+	height: 300px;
+	background-color: gray;
+}
+
+.slot {
+	width: 100px;
+	height: 300px;
+	background-color: #ccc;
+	position: relative;
+	float: left;
+	background: url("images/slot.jpg") repeat-y;
+	background-position: 0px 0px;
+}
+
+</style>
+<title>
+Odobo slot machine
+</title>
+</head>
+<body>
+
+<div class="slotsContainer">
+	<div class="slot"></div>
+	<div class="slot"></div>
+	<div class="slot"></div>
+	<div class="slot"></div>
+	<div class="slot"></div>
+</div>
+
+<button id="startButton">START</button>
+
+<script type="text/javascript" src="src/js/slot.js"></script>
+<script type="text/javascript" src="src/js/slotMachine.js"></script>
+</body>
+</html>
