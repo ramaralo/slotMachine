@@ -7,25 +7,66 @@
  *
  */
 function Slot(paramObj) {
+	var myObj = this;
+
 	var stopPositions= [0, 100, 200];
 	var finalPosition = 0;
 	var id = paramObj.id;
 	var animationFrameId = null;
 	var animationSpeed = 10;
+	var maxAnimationSpeed = 300;
+	var minAnimationSpeed = 10;
+	var acceleration = 1;
 
 
 	var domElements ={
 			slot: paramObj.slotDom
 	};
 
+	function increaseSpeed() {
+		if(animationSpeed < maxAnimationSpeed) {
+			animationSpeed++;
+			if(animationSpeed === maxAnimationSpeed) {
+				console.log('slot', id, 'reached max speed', maxAnimationSpeed);
+			}
+		}
+	};
+
+	function decreaseSpeed() {
+		if(animationSpeed > minAnimationSpeed) {
+			animationSpeed--;
+		}
+	};
+
 	function render() {
 		var currentYposition;
+
+		if(acceleration < 1) {
+			decreaseSpeed();
+
+			if(animationSpeed === 10) {
+				cancelAnimationFrame(animationFrameId);
+
+				domElements.slot.css('background-position-y', stopPositions[finalPosition-1] + "px");
+
+				reset();
+
+				console.log('slot', id, 'stopped');
+
+				myObj.onStop(id);
+
+				return;
+			}
+		}
+		else {
+			increaseSpeed();
+		}
 
 		switch ($.browser.name) {
 		case 'chrome':
 			currentYposition = parseInt(domElements.slot.css('background-position-y'));
 
-			currentYposition = currentYposition + animationSpeed++;
+			currentYposition = currentYposition + animationSpeed;
 
 			domElements.slot.css('background-position-y', currentYposition + "px");
 			break;
@@ -48,7 +89,11 @@ function Slot(paramObj) {
 
 	function startSpining() {
 		animationFrameId = window.requestAnimationFrame(startSpining);
-		render();
+		render(1);
+	};
+
+	function startStoping() {
+		acceleration = -1;
 	};
 
 	this.start = function(paramObj) {
@@ -59,13 +104,8 @@ function Slot(paramObj) {
 
 	this.stop = function() {
 		console.log("Slot", id, "stopping...");
-		cancelAnimationFrame(animationFrameId);
 
-		domElements.slot.css('background-position-y', stopPositions[finalPosition-1] + "px");
-
-		reset();
-
-		this.onStop(id);
+		startStoping();
 	};
 
 	/**
