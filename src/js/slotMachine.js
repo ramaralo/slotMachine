@@ -16,7 +16,7 @@
 				startButton: $('#startButton'),
 				slots: $('.slotsContainer').children()
 		};
-		var stopTimeout = 2000;
+		var stopTimeout = 5000;
 		var slotStopIntervalTimeout = 1000;
 		var isRunning = false;
 
@@ -24,6 +24,8 @@
 			slotInstance.onStop = function(slotId) {
 				if(slotId <= slots.length && isRunning && slots[slotId + 1] !== undefined) {
 					function stopCallback() {
+						console.log('calling stop on slot', slotId + 1);
+
 						slots[slotId + 1].stop();
 					};
 
