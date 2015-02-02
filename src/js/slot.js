@@ -22,11 +22,23 @@ function Slot(paramObj) {
 	};
 
 	function increaseSpeed() {
-		return (animationSpeed < animationMaxSpeed) ? animationSpeed++ : animationMaxSpeed;
+		var speed = (animationSpeed < animationMaxSpeed) ? animationSpeed++ : animationMaxSpeed;
+
+		$('#speed'+id).html(speed);
+
+		return speed;
+	}
+
+	function decreaseSpeed() {
+		var speed = animationSpeed--;
+
+		$('#speed'+id).html(speed);
+
+		return speed;
 	}
 
 	function calSpeedIncrement() {
-		return (accelaration > 0) ? increaseSpeed() : animationSpeed--;
+		return (accelaration > 0) ? increaseSpeed() : decreaseSpeed();
 	}
 
 	function render() {
@@ -93,6 +105,8 @@ function Slot(paramObj) {
 	this.stop = function() {
 		console.log("Slot", id, "stopping...");
 		accelaration = -1;
+
+		$('#acceleration'+id).html(accelaration);
 	};
 
 	/**
