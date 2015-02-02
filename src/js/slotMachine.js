@@ -63,7 +63,11 @@
 
 			var slotNumerb = slots.length;
 			for ( var s = 0; s < slotNumerb; s++) {
-				positionArray.push(Math.floor((Math.random() * initArgs.yIcons) + 1));
+				var pos = Math.floor((Math.random() * initArgs.yIcons) + 1);
+
+				$('#stop'+s).html(pos);
+
+				positionArray.push(pos);
 			}
 			return positionArray;
 		}

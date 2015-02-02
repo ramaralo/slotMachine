@@ -79,6 +79,7 @@ function Slot(paramObj) {
 	function stopAngGoToLastPosition() {
 		cancelAnimationFrame(animationFrameId);
 
+
 		domElements.slot.css('background-position-y', stopPositions[finalPosition-1] + "px");
 
 		reset();
