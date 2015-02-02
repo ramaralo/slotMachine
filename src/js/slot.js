@@ -21,12 +21,19 @@ function Slot(paramObj) {
 			slot: paramObj.slotDom
 	};
 
+	function increaseSpeed() {
+		return (animationSpeed < animationMaxSpeed) ? animationSpeed++ : animationMaxSpeed;
+	}
+
+	function calSpeedIncrement() {
+		return (accelaration > 0) ? increaseSpeed() : animationSpeed--;
+	}
+
 	function render() {
 		var currentYposition;
 
-		var speedIncrement = (accelaration > 0) ? animationSpeed++ : animationSpeed--;
+		var speedIncrement = calSpeedIncrement();
 
-		console.log(speedIncrement);
 
 		if(speedIncrement === 0) {
 			stopAngGoToLastPosition();
