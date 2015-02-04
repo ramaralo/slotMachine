@@ -8,13 +8,14 @@
  */
 function Slot(paramObj) {
 	var myObj = this;
-	var stopPositions= [0, 100, 200];
-	var finalPosition = 0;
+	var stopPositions= [100, 300, 500]; // y pixel positions to stop at each possible final position
+	var finalPosition = 0; // 0 | 1 | 2
 	var id = paramObj.id;
 	var animationFrameId = null;
 	var animationSpeed = 1;
 	var animationMaxSpeed = 100;
 	var accelaration = 1;
+	var finalPosition = null; // final position in px
 
 
 	var domElements ={
@@ -37,14 +38,14 @@ function Slot(paramObj) {
 		return speed;
 	}
 
-	function calSpeedIncrement() {
+	function calcSpeedIncrement() {
 		return (accelaration > 0) ? increaseSpeed() : decreaseSpeed();
 	}
 
 	function render() {
 		var currentYposition;
 
-		var speedIncrement = calSpeedIncrement();
+		var speedIncrement = calcSpeedIncrement();
 
 
 		if(speedIncrement === 0) {
@@ -76,15 +77,57 @@ function Slot(paramObj) {
 		}
 	};
 
+	function calcLastPos(currentPosition) {
+		var remaingTurns = currentPosition % 300;
+
+		var displacment = stopPositions[finalPosition] - remaingTurns;
+
+		return currentPosition + displacment;
+	}
+
+	function animateAndStop() {
+		cancelAnimationFrame(animationFrameId);
+
+		animationFrameId = window.requestAnimationFrame(animateAndStop);
+
+		var currentPos = parseInt(domElements.slot.css('background-position-y'));
+
+		if(parseInt(domElements.slot.css('background-position-y')) < finalPosition) {
+
+
+			domElements.slot.css('background-position-y', ++currentPos);
+
+		}else if(parseInt(domElements.slot.css('background-position-y')) > finalPosition) {
+			domElements.slot.css('background-position-y', --currentPos);
+		}
+		else {
+			cancelAnimationFrame(animationFrameId);
+			reset();
+
+			myObj.onStop(id);
+		}
+
+	}
+
+	function gotoLastPosition() {
+		var currentPosition = parseInt(domElements.slot.css('background-position-y'));
+
+		finalPosition = calcLastPos(currentPosition);
+
+
+		animateAndStop();
+
+		//domElements.slot.css('background-position-y', calcLastPos(currentPosition) + "px");
+
+		//reset();
+
+		//myObj.onStop(id);
+	}
+
 	function stopAngGoToLastPosition() {
 		cancelAnimationFrame(animationFrameId);
 
-
-		domElements.slot.css('background-position-y', stopPositions[finalPosition-1] + "px");
-
-		reset();
-
-		myObj.onStop(id);
+		gotoLastPosition();
 	}
 
 	function reset() {

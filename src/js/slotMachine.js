@@ -19,6 +19,8 @@
 		var stopTimeout = 5000;
 		var slotStopIntervalTimeout = 1000;
 		var isRunning = false;
+		var slotNumbers = [1,2,3];
+		var sequence = [];
 
 		function assignSlotInstanceStopBehaviour(slotInstance) {
 			slotInstance.onStop = function(slotId) {
@@ -52,6 +54,7 @@
 		};
 
 		/**
+		 * // TODO update comment. when done it should generate n => 0 < 3
 		 * Generates an array of stop positions.
 		 * Generates a number between 1 and the number of slot icons.
 		 * This number is used as a stop postion for each slot.
@@ -63,7 +66,8 @@
 
 			var slotNumerb = slots.length;
 			for ( var s = 0; s < slotNumerb; s++) {
-				var pos = Math.floor((Math.random() * initArgs.yIcons) + 1);
+//				var pos = Math.floor((Math.random() * initArgs.yIcons) + 1);
+				var pos = Math.floor((Math.random() * initArgs.yIcons));
 
 				$('#stop'+s).html(pos);
 
@@ -77,6 +81,17 @@
 			slots[0].stop(); // calling stop on first slot
 		};
 
+		function getSequence(stopPositions) {
+			sequence = [slotNumbers[stopPositions[0]], slotNumbers[stopPositions[1]], slotNumbers[stopPositions[2]], slotNumbers[stopPositions[3]], slotNumbers[stopPositions[4]]];
+
+			$('#seq0').html(sequence[0]);
+			$('#seq1').html(sequence[1]);
+			$('#seq2').html(sequence[2]);
+			$('#seq3').html(sequence[3]);
+			$('#seq4').html(sequence[4]);
+
+		}
+
 		/**
 		 * Starts slotMachine by calling start() on each slot.
 		 * Before all slots are started, their stop positions are already predefined
@@ -84,11 +99,13 @@
 		 *
 		 */
 		function start() {
-			var stopPostions = getSlotStopPostions(); // stop positions for all slots
+			var stopPositions = getSlotStopPostions(); // stop positions for all slots
+
+			getSequence(stopPositions);
 
 			var slotNum = slots.length;
 			for ( var s = 0; s < slotNum; s++) {
-				slots[s].start({stopPosition: stopPostions[s]}); // calling start on the slot, and assigning a stop position
+				slots[s].start({stopPosition: stopPositions[s]}); // calling start on the slot, and assigning a stop position
 			}
 
 			isRunning = true;
