@@ -26,15 +26,11 @@
 			slotInstance.onStop = function(slotId) {
 				if(slotId <= slots.length && isRunning && slots[slotId + 1] !== undefined) {
 					function stopCallback() {
-						console.log('calling stop on slot', slotId + 1);
-
 						slots[slotId + 1].stop();
 					};
 
 					window.setTimeout(stopCallback, slotStopIntervalTimeout); // sequential slot stops
-
 				}
-
 			};
 		};
 
@@ -66,18 +62,18 @@
 
 			var slotNumerb = slots.length;
 			for ( var s = 0; s < slotNumerb; s++) {
-//				var pos = Math.floor((Math.random() * initArgs.yIcons) + 1);
+
 				var pos = Math.floor((Math.random() * initArgs.yIcons));
 
 				$('#stop'+s).html(pos);
 
 				positionArray.push(pos);
 			}
+
 			return positionArray;
 		}
 
 		function stop() {
-			console.log("SlotMachine stopping...");
 			slots[0].stop(); // calling stop on first slot
 		};
 

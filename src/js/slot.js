@@ -9,14 +9,14 @@
 function Slot(paramObj) {
 	var myObj = this;
 	var stopPositions= [100, 300, 500]; // y pixel positions to stop at each possible final position
-	var finalPosition = 0; // 0 | 1 | 2
+	var finalPositionIndex = 0; // 0 | 1 | 2 The final icon index to place in the middle of the slot
 	var id = paramObj.id;
 	var animationFrameId = null;
 	var animationSpeed = 1;
 	var animationMaxSpeed = 100;
 	var accelaration = 1;
 	var finalPosition = null; // final position in px
-
+	var currentPosition = 0;
 
 	var domElements ={
 			slot: paramObj.slotDom
@@ -47,22 +47,16 @@ function Slot(paramObj) {
 
 		var speedIncrement = calcSpeedIncrement();
 
-
 		if(speedIncrement === 0) {
 			stopAngGoToLastPosition();
 			return;
 		}
-		else if(speedIncrement > animationMaxSpeed) {
-			speedIncrement = animationMaxSpeed;
-		}
 
 		switch ($.browser.name) {
 		case 'chrome':
-			currentYposition = parseInt(domElements.slot.css('background-position-y'));
+			currentPosition = parseInt(domElements.slot.css('background-position-y')) + speedIncrement;
 
-			currentYposition = currentYposition + speedIncrement;
-
-			domElements.slot.css('background-position-y', currentYposition + "px");
+			domElements.slot.css('background-position-y', currentPosition + "px");
 			break;
 		case 'mozilla': // :( not working in mozilla... suprised for jquery not doing this right...
 			currentYposition = parseInt(domElements.slot.css('background-position').split(" ")[0]);
@@ -77,10 +71,16 @@ function Slot(paramObj) {
 		}
 	};
 
-	function calcLastPos(currentPosition) {
+	function calcLastPos() {
 		var remaingTurns = currentPosition % 300;
 
-		var displacment = stopPositions[finalPosition] - remaingTurns;
+		$("#turns"+id).html(remaingTurns);
+
+		console.log('remaining turns', remaingTurns);
+
+		var displacment = stopPositions[finalPositionIndex] - remaingTurns;
+
+		console.log('finalPosition', finalPositionIndex, stopPositions[finalPositionIndex], "-", remaingTurns, 'displacement', displacment);
 
 		return currentPosition + displacment;
 	}
@@ -90,15 +90,11 @@ function Slot(paramObj) {
 
 		animationFrameId = window.requestAnimationFrame(animateAndStop);
 
-		var currentPos = parseInt(domElements.slot.css('background-position-y'));
+		if(parseInt(currentPosition) < finalPosition) {
+			domElements.slot.css('background-position-y', ++currentPosition);
 
-		if(parseInt(domElements.slot.css('background-position-y')) < finalPosition) {
-
-
-			domElements.slot.css('background-position-y', ++currentPos);
-
-		}else if(parseInt(domElements.slot.css('background-position-y')) > finalPosition) {
-			domElements.slot.css('background-position-y', --currentPos);
+		}else if(parseInt(currentPosition) > finalPosition) {
+			domElements.slot.css('background-position-y', --currentPosition);
 		}
 		else {
 			cancelAnimationFrame(animationFrameId);
@@ -106,28 +102,16 @@ function Slot(paramObj) {
 
 			myObj.onStop(id);
 		}
-
-	}
-
-	function gotoLastPosition() {
-		var currentPosition = parseInt(domElements.slot.css('background-position-y'));
-
-		finalPosition = calcLastPos(currentPosition);
-
-
-		animateAndStop();
-
-		//domElements.slot.css('background-position-y', calcLastPos(currentPosition) + "px");
-
-		//reset();
-
-		//myObj.onStop(id);
 	}
 
 	function stopAngGoToLastPosition() {
 		cancelAnimationFrame(animationFrameId);
 
-		gotoLastPosition();
+		currentPosition = parseInt(domElements.slot.css('background-position-y'));
+
+		finalPosition = calcLastPos();
+
+		animateAndStop();
 	}
 
 	function reset() {
@@ -141,13 +125,12 @@ function Slot(paramObj) {
 	};
 
 	this.start = function(paramObj) {
-		finalPosition = paramObj.stopPosition;
-		console.log('slot starting and set to stop at: ', finalPosition);
+		finalPositionIndex = paramObj.stopPosition;
+
 		startSpining();
 	};
 
 	this.stop = function() {
-		console.log("Slot", id, "stopping...");
 		accelaration = -1;
 
 		$('#acceleration'+id).html(accelaration);
@@ -161,5 +144,4 @@ function Slot(paramObj) {
 	 *
 	 */
 	this.onStop = function() {};
-
 }
