@@ -1,4 +1,67 @@
 /**
+ * Slot abstraction
+ *
+ * @param paramObj
+ * @constructor
+ *
+ *
+ */
+function AbstSlot(paramObj) {
+
+	'use strict'
+
+	var ICON_DIM = {
+		width: 100,
+		height: 100
+	};
+	var id;
+	var iconNum;
+	var slotPositions = [];
+	var animationFrameId = null;
+	var animationSpeed = 1;
+	var animationMaxSpeed = 100;
+	var accelaration = 1;
+	var finalPosition = null; // final position in px
+	var currentPosition = 0;
+
+	function calcSlotPositions() {
+		var value = ICON_DIM.height;
+
+		var arrayLength = slotPositions.length;
+		for(var i = 0; i < arrayLength; i++) {
+			slotPositions.push(value);
+
+			value = 200;
+		}
+	}
+
+	function increaseSpeed() {
+		animationSpeed = (animationSpeed < animationMaxSpeed) ? animationSpeed++ : animationMaxSpeed;
+	}
+
+	function decreaseSpeed() {
+		animationSpeed = animationSpeed--;
+	}
+
+	this.getSlotPositions = function() {
+		return slotPositions;
+	}
+
+	this.getId = function() {
+		return id;
+	}
+
+	function init(paramObj) {
+		id = paramObj.id;
+		iconNum = paramObj.iconNum;
+		slotPositions = calcSlotPositions();
+	}
+
+	init(paramObj);
+}
+
+
+/**
  * Reprensets a three icon slot
  *
  * @param paramObj
@@ -145,3 +208,5 @@ function Slot(paramObj) {
 	 */
 	this.onStop = function() {};
 }
+
+Slot.prototype = new AbstSlot({iconNum: 3})
