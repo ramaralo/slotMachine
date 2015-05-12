@@ -1,0 +1,3 @@
+[submodule "src/dependencies/bgAnim"]
+	path = src/dependencies/bgAnim
+	url = https://github.com/ramaralo/background-anim-no-overflow.git
